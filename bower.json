@@ -1,0 +1,21 @@
+{
+  "name": "SimpleOpenSeadragon",
+  "homepage": "https://github.com/Edminsson/SimpleOpenSeadragon",
+  "authors": [
+    "Axel Aguilar <abc709@hotmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "openseadragon": "^2.2.1",
+    "jquery": "^3.1.1"
+  }
+}

@@ -1,0 +1,30 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/site.css">
+</head>
+<body>
+    <div id="openseadragon1" class="openseadragon" ></div>
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/openseadragon/built-openseadragon/openseadragon/openseadragon.min.js"></script>
+
+<script>
+    OpenSeadragon({
+        id: 'openseadragon1',
+        prefixUrl:          "bower_components/openseadragon/built-openseadragon/openseadragon/images/",
+        preserveViewport:   true,
+        visibilityRatio:    1,
+        minZoomLevel:       1,
+        defaultZoomLevel:   1,
+        sequenceMode:       true,
+        tileSources:   [
+            "https://iiif.riksarkivet.se/arkis!C0000268_00010/info.json"
+        ]
+    });
+</script>
+
+
+</body>
+</html>
