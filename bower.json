@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "openseadragon": "^2.2.1",
+    "openseadragon-filtering": "NIST-ISG/OpenSeadragonFiltering#master",
     "jquery": "^3.1.1"
   }
 }
