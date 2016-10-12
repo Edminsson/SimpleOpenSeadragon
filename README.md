@@ -1,5 +1,7 @@
 # The most simple page using openseadragon and openseadragonFiltering
 
+OpenseadragonFiltering is listed as a plugin http://openseadragon.github.io/#plugins
+
 I don't know how to best install openseadragonFiltering. Trying to access the master branch in the bower file directly does not seem to work. I installed the file manually. 
 
 I had to set crossOriginPolicy to anonymous to avoid the following error
