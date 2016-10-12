@@ -10,12 +10,10 @@
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/openseadragon/built-openseadragon/openseadragon/openseadragon.min.js"></script>
-    <script src="openseadragon-filtering.js"></script>
 
 <script>
 
     $(function() {
-
         var viewer = OpenSeadragon({
             id: 'openseadragon1',
             prefixUrl:          "bower_components/openseadragon/built-openseadragon/openseadragon/images/",
@@ -26,6 +24,7 @@
             sequenceMode:       true,
             crossOriginPolicy: 'anonymous',
             tileSources:   [
+                "https://dlcs.io/iiif-img/2/1/ff2085d5-a9c7-412e-9dbe-dda87712228d/info.json",
                 "https://iiif.riksarkivet.se/arkis!C0000268_00010/info.json",
                 "https://iiif.riksarkivet.se/arkis!C0000268_00011/info.json",
                 "https://iiif.riksarkivet.se/arkis!C0000268_00012/info.json",
@@ -34,16 +33,43 @@
             ]
         });
 
+        var self;
+
+        var osd = window.OpenSeadragon;
+        osd.Viewer.prototype.setCustomFilter = function(options) {
+            var viewer = this;
+            //viewer.addHandler('tile-loaded', tileLoadedHandler);
+            viewer.addHandler('tile-drawing', tileDrawingHandler);
+            viewer.forceRedraw();
+        };
+        
+        function tileDrawingHandler(event) {
+            var tile = event.tile;
+            var rendered = event.rendered;
+            applyFilter(rendered);
+
+        }
+
+        function applyFilter(context) {
+            var imgData = context.getImageData(
+                0, 0, context.canvas.width, context.canvas.height);
+            var pixels = imgData.data;
+
+            for(var i = 0; i < pixels.length; i += 4) {
+                var brightness = 0.34 * pixels[i] + 0.5 * pixels[i + 1] + 0.16 * pixels[i + 2];
+                // red
+                pixels[i] = brightness;
+                // green
+                pixels[i + 1] = brightness;
+                // blue
+                pixels[i + 2] = brightness;
+            }
+
+            context.putImageData(imgData, 0, 0);
+        };
+
         $('#knappen').on('click', function() {
-            console.log('click!!!');
-            viewer.setFilterOptions({
-                filters: {
-                    processors: OpenSeadragon.Filters.BRIGHTNESS(50)
-                },
-                loadMode: 'sync'
-            });
-
-
+            viewer.setCustomFilter();
         });
     });
 
