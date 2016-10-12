@@ -39,10 +39,12 @@
             }
             
             var imageObj = new Image();
+            imageObj.crossOrigin = "anonymous";
             imageObj.onload = function() {
                 drawImage(this);
             };
-            imageObj.src = "/winicon.jpg";
+            //imageObj.src = "/winicon.jpg";
+            imageObj.src = "https://dlcs.io/iiif-img/2/1/ff2085d5-a9c7-412e-9dbe-dda87712228d/full/161,/0/default.jpg";
 
 
         });
