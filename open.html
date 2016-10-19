@@ -1,0 +1,100 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/site.css">
+</head>
+<body>
+    <button id="bild1">Ladda bild 1</button>
+    <button id="bild2">Ladda bild 2</button>
+
+
+    <div id="openseadragon1" class="openseadragon" ></div>
+
+    <button id="logbounds">Log Bounds</button>
+    <label for="x">x</label> <input type="text" id="x" name="x">
+    <label for="y">y</label> <input type="text" id="y" name="y">
+    <label for="width">width</label> <input type="text" id="width" name="width">
+    <label for="height">height</label> <input type="text" id="height" name="height">
+    <button id="setbounds">Set Bounds</button>
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/openseadragon/built-openseadragon/openseadragon/openseadragon.js"></script>
+    <script src="bower_components/manifesto/dist/client/manifesto.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+    <script src="lib/manifold.bundle.js"></script>
+    <script src="openseadragon-filtering.js"></script>
+
+<script>
+
+    $(function() {
+        var imageInfo = {};
+
+        var viewer = window.openSeadragonViewer = OpenSeadragon({
+            id: 'openseadragon1',
+            prefixUrl:          "bower_components/openseadragon/built-openseadragon/openseadragon/images/",
+            preserveViewport:   true,
+            // visibilityRatio:    1,
+            // minZoomLevel:       1,
+            defaultZoomLevel:   0,
+            sequenceMode:       true,
+            crossOriginPolicy: 'anonymous'
+        });
+
+        var dataUri1 = 'https://iiif.riksarkivet.se/arkis!C0000268_00001/info.json';
+        var dataUri2 = 'https://iiif.riksarkivet.se/arkis!C0000268_00015/info.json';
+        viewer.open(dataUri1);
+
+        viewer.addHandler('open', function(viewer) {
+            loggaBoundsOchFyllLabels();
+        });
+
+        viewer.addHandler('zoom', (viewer) => {
+            loggaBoundsOchFyllLabels();
+        });        
+
+        viewer.addHandler('pan', (viewer) => {
+            loggaBoundsOchFyllLabels();
+        });        
+
+
+        function loggaBounds() {
+            console.log('getBounds: ', viewer.viewport.getBounds());
+        }
+
+        function loggaBoundsOchFyllLabels() {
+            loggaBounds();
+            var bounds = viewer.viewport.getBounds();
+            $('#x').val(bounds.x);
+            $('#y').val(bounds.y);
+            $('#width').val(bounds.width);
+            $('#height').val(bounds.height);
+        }
+
+        $('#bild1').on('click', function() {
+            viewer.open(dataUri1);
+        });
+        $('#bild2').on('click', function() {
+            viewer.open(dataUri2);
+        });
+        $('#logbounds').on('click', function() {
+            loggaBoundsOchFyllLabels();
+        });
+        $('#setbounds').on('click', function() {
+            var t = new OpenSeadragon.Rect;
+            t.x = Number($('#x').val()),
+            t.y = Number($('#y').val()),
+            t.width = Number($('#width').val()),
+            t.height = Number($('#height').val());
+            viewer.viewport.fitBounds(t, !0)             
+            loggaBoundsOchFyllLabels();
+        });        
+    });
+
+
+
+</script>
+
+
+</body>
+</html>

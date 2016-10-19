@@ -1,0 +1,103 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/site.css">
+</head>
+<body>
+    <button id="knappen">Log Bounds</button>
+    <div id="openseadragon1" class="openseadragon" ></div>
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/openseadragon/built-openseadragon/openseadragon/openseadragon.min.js"></script>
+    <script src="bower_components/manifesto/dist/client/manifesto.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+    <script src="lib/manifold.bundle.js"></script>
+    <script src="openseadragon-filtering.js"></script>
+
+<script>
+
+    $(function() {
+
+        //var manifestUri = 'https://iiif.riksarkivet.se/arkis!C0000268/manifest';
+        var manifestUri = "http://localhost:58982/arkis!C0000268/manifest";
+        var resArray = [];
+        var dummyFunction = function(data) { console.log('Dummymetod anropades!!!!!!', data); return $.Deferred().resolve().promise(); };
+        var resurser;
+        var isCORSEnabled = true;
+
+        Manifold.loadManifest({
+            iiifResourceUri: manifestUri,
+            collectionIndex: 0,
+            manifestIndex: 0,
+            sequenceIndex: 0,
+            canvasIndex: 10,
+            locale: "sv-SE",
+            isCORSEnabled: isCORSEnabled
+        }).then(function(helper) {
+            var canvas = helper.getCanvasByIndex(15);
+            var extRes = new Manifold.ExternalResource(canvas, helper.getInfoUri, isCORSEnabled);
+            resArray.push(extRes);
+            manifesto.loadExternalResources(resArray, "session", dummyFunction, dummyFunction, dummyFunction, dummyFunction, dummyFunction, dummyFunction, dummyFunction)
+                .then(function(res) {
+                    console.log('from loadExternalResources', res);
+                    resurser = _.map(res, function(e) {
+                        return _.toPlainObject(e.data)
+                    });
+                    for (var i = 0; i < resurser.length; i++) {
+                        var n = resurser[i];
+                        laddaTile(n);
+                    }           
+                });
+            console.log('canvas by index', canvas);
+            console.log('external resource', extRes);
+        });
+
+
+        var viewer = window.openSeadragonViewer = OpenSeadragon({
+            id: 'openseadragon1',
+            prefixUrl:          "bower_components/openseadragon/built-openseadragon/openseadragon/images/",
+            preserveViewport:   true,
+            // visibilityRatio:    1,
+            // minZoomLevel:       1,
+            defaultZoomLevel:   0,
+            sequenceMode:       true,
+            crossOriginPolicy: 'anonymous'
+        });
+
+        var laddaTile = function(info) {
+            viewer.close();
+            viewer.addTiledImage({
+                tileSource: info,
+                x: info.x,
+                y: info.y,
+                width: info.width,
+                success: function(i) {
+                    console.log('getBounds: ', viewer.viewport.getBounds());
+                    viewer.viewport.goHome(true);
+                    console.log('getBounds: ', viewer.viewport.getBounds());
+                    // viewer.canvas.focus();
+                    // var currentBounds = viewer.viewport.getBounds();
+                    // var t = new OpenSeadragon.Rect;
+                    // t.x = -1321.8829,
+                    // t.y = -1321.8829,
+                    // t.width = 2644.7658,
+                    // t.height = 1911.3591,
+                    // viewer.viewport.fitBounds(t, !0)                    
+                } 
+            }); 
+        }
+
+
+        $('#knappen').on('click', function() {
+            console.log('getBounds: ', viewer.viewport.getBounds());
+        });
+    });
+
+
+
+</script>
+
+
+</body>
+</html>
