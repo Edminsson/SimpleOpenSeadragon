@@ -7,8 +7,12 @@
 <body>
     <button id="bild1">Ladda bild 1</button>
     <button id="bild2">Ladda bild 2</button>
+    <button id="logbounds">Log bounds</button>
+    <button id="savebounds">Save bounds</button>
+    <button id="setsavedbounds">Set saved bounds</button>
+    <button id="setsavedboundswithconstraints">Set saved bounds with constraints</button>
 
-    <button id="logbounds">Log Bounds</button>
+
     <div id="openseadragon1" class="openseadragon" ></div>
     <label for="x">x</label> <input type="text" id="x" name="x">
     <label for="y">y</label> <input type="text" id="y" name="y">
@@ -36,6 +40,7 @@
 
     $(function() {
         var imageInfo = {};
+        var savedBounds;
 
         var viewer = window.openSeadragonViewer = OpenSeadragon({
             id: 'openseadragon1',
@@ -89,19 +94,21 @@
                 y: info.y,
                 height: info.height,
                 success: function(i) {
-                    loggaBounds();
+                    window.tiledImage = i;
+                    loggaBounds('BEFORE');
                     viewer.viewport.goHome(true);
-                    loggaBoundsOchFyllLabels();
+                    loggaBoundsOchFyllLabels('AFTER');
                 } 
             }); 
         }
 
-        function loggaBounds() {
-            console.log('getBounds: ', viewer.viewport.getBounds());
+        function loggaBounds(medd) {
+            medd = medd ? medd : "getBounds: ";
+            console.log(medd, viewer.viewport.getBounds());
         }
 
-        function loggaBoundsOchFyllLabels() {
-            loggaBounds();
+        function loggaBoundsOchFyllLabels(medd) {
+            loggaBounds(medd);
             var bounds = viewer.viewport.getBounds();
             $('#x').val(bounds.x);
             $('#y').val(bounds.y);
@@ -126,7 +133,18 @@
             t.height = Number($('#height').val()),
             viewer.viewport.fitBounds(t, !0)             
             loggaBoundsOchFyllLabels();
-        });        
+        });
+        $('#savebounds').on('click', function() {
+            savedBounds = viewer.viewport.getBounds();
+        });
+        $('#setsavedbounds').on('click', function() {
+            viewer.viewport.fitBounds(savedBounds, true);
+        });
+        $('#setsavedboundswithconstraints').on('click', function() {
+            viewer.viewport.fitBoundsWithConstraints(savedBounds, true);
+        });
+
+
     });
 
 

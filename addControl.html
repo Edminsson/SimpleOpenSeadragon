@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/site.css">
+</head>
+<body>
+    <button id="knappen">Use filter</button>
+    <div id="openseadragon1" class="openseadragon" ></div>
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/openseadragon/built-openseadragon/openseadragon/openseadragon.js"></script>
+    <script src="openseadragon-filtering.js"></script>
+
+<script>
+
+    $(function() {
+
+        var viewer = window.openSeadragonViewer = OpenSeadragon({
+            id: 'openseadragon1',
+            prefixUrl:          "bower_components/openseadragon/built-openseadragon/openseadragon/images/",
+            preserveViewport:   true,
+            visibilityRatio:    1,
+            minZoomLevel:       1,
+            defaultZoomLevel:   1,
+            sequenceMode:       true,
+            crossOriginPolicy: 'anonymous',
+            tileSources:   [
+                "https://iiif.riksarkivet.se/arkis!C0000268_00010/info.json",
+                "https://iiif.riksarkivet.se/arkis!C0000268_00011/info.json",
+                "https://iiif.riksarkivet.se/arkis!C0000268_00012/info.json",
+                "https://iiif.riksarkivet.se/arkis!C0000268_00013/info.json",
+                "https://iiif.riksarkivet.se/arkis!C0000268_00014/info.json"
+            ]
+        });
+
+        var $prevButton = $('<div>Uno</div>');
+        var $nextButton = $('<div>Dos</div>');
+        
+        viewer.addControl($prevButton[0], {anchor: OpenSeadragon.ControlAnchor.TOP_LEFT});
+        viewer.addControl($nextButton[0], {anchor: OpenSeadragon.ControlAnchor.TOP_RIGHT});
+
+
+
+        $('#knappen').on('click', function() {
+            console.log('click!!!');
+            viewer.setFilterOptions({
+                filters: {
+                    processors: OpenSeadragon.Filters.BRIGHTNESS(50)
+                },
+                loadMode: 'sync'
+            });
+
+
+        });
+    });
+
+
+
+</script>
+
+
+</body>
+</html>
