@@ -65,7 +65,7 @@
         });
 
         var dataUri1 = 'https://iiif.riksarkivet.se/arkis!C0000268_00001/info.json';
-        var dataUri2 = 'https://iiif.riksarkivet.se/arkis!C0000268_00015/info.json';
+        var dataUri2 = 'https://iiif.riksarkivet.se/arkis!C0000268_00003/info.json';
 
         laddaBild(dataUri1);
 
@@ -86,15 +86,17 @@
         }
 
         viewer.addHandler('open', function(viewer) {
-            loggaBoundsOchFyllLabels();
+            loggaBoundsOchFyllLabels('open event');
         });
 
         viewer.addHandler('zoom', (viewer) => {
-            loggaBoundsOchFyllLabels();
+            setTimeout(function() {
+                loggaBoundsOchFyllLabels('zoom event');
+            },100)
         });        
 
         viewer.addHandler('pan', (viewer) => {
-            loggaBoundsOchFyllLabels();
+            loggaBoundsOchFyllLabels('pan event');
         });             
 
         function laddaTile(info) {
